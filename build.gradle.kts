@@ -1,6 +1,7 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 plugins {
     id("java")
-    id("application")
     id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
@@ -17,11 +18,28 @@ dependencies {
 
     implementation("com.google.code.gson:gson:2.10.1")
 
-
     testImplementation(platform("org.junit:junit-bom:5.9.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        manifest {
+            attributes(
+                "Main-Class" to "com.thyamix.Main",
+                "Multi-Release" to "True"
+            )
+        }
+    }
+
+    withType<AbstractArchiveTask> {
+        isPreserveFileTimestamps = false
+        isReproducibleFileOrder = true
+    }
+
+    build { dependsOn(shadowJar) }
 }
