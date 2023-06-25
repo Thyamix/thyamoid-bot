@@ -41,4 +41,4 @@ jobs:
           file: "./Dockerfile"
           push: true
           platforms: linux/amd64,linux/arm64/v8
-          tags: "ghcr.io/${{ github.repository }}:${{ github.sha }}"
+          tags: "ghcr.io/thyamix/thyamoid-bot:${{ github.sha }}"
