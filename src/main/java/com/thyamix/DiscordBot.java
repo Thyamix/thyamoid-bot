@@ -18,7 +18,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class DiscordBot {
-    private static final String TOKEN = "MTEyMTE1MDY3MjUyODc1Mjc4MA.GRkzur.6JSWFID-kwai6skNxeaYZSypUoc6RQm3e3A7Rg";
+    private static final String TOKEN = System.getenv("DISCORD_TOKEN");
     private final ServerSettings serverSettings;
     private final DiscordLoggerManager discordLoggerManager;
     private final JDA api;
