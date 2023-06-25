@@ -1,5 +1,4 @@
 name: "Build and push"
-description: "Builds a Java project's Dockerfile and pushes the resulting Docker image to the registry"
 
 on:
   push:
