@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 public class CommandBackend extends ListenerAdapter {
     private static final Logger LOGGER = LoggerFactory.getLogger(CommandBackend.class);
 
+    private static final String GUILD_ID = System.getenv("GUILD_ID");
+
     // Map<Command ID, Command>
     private final @NotNull Map<String, Command> commands;
 
@@ -43,7 +45,7 @@ public class CommandBackend extends ListenerAdapter {
     private void registerCommands(@NotNull JDA jda, @NotNull List<Command> commands) {
         List<CommandData> commandDataList = commands.stream().map(Command::createCommandData).toList();
 
-        jda.getGuildById(1081960729072111766L).updateCommands().addCommands(commandDataList)
+        jda.getGuildById(GUILD_ID).updateCommands().addCommands(commandDataList)
                 .queue(success -> LOGGER.info("Registered {} commands with Discord API", commands.size()),
                         ex -> LOGGER.error("Failed to register commands: ", ex));
     }
