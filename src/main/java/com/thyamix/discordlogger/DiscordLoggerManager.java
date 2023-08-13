@@ -125,14 +125,16 @@ public class DiscordLoggerManager extends ListenerAdapter {
         if (this.serverSettings.getLoggerEnabled()) {
             Channel channel = event.getChannel().asTextChannel();
             TextChannel logChannel = api.getTextChannelById(this.serverSettings.getLogChannelId());
+            User user = event.getMember().getUser();
             if (logChannel != channel) {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 String description;
 
-                description = "A message was sent on " + channel.getAsMention() + " by " + event.getAuthor().getAsMention() + " with Message-ID: " + event.getMessageId();
+                description = ":incoming_envelope: A message was sent on " + channel.getAsMention() + " by " + event.getAuthor().getAsMention() + " with Message-ID: " + event.getMessageId();
 
 
-                embedBuilder.setDescription(description)
+                embedBuilder.setAuthor(user.getName(), null, user.getDefaultAvatarUrl())
+                        .setDescription(description)
                         .addField("Message", event.getMessage().getContentDisplay(), false)
                         .setTimestamp(Instant.now())
                         .setFooter(event.getGuild().getName());
