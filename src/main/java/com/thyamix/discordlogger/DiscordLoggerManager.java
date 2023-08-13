@@ -3,6 +3,8 @@ package com.thyamix.discordlogger;
 import com.thyamix.model.ServerSettings;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.audit.ActionType;
+import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -11,9 +13,17 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.role.RoleCreateEvent;
+import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
+import net.dv8tion.jda.api.events.role.update.GenericRoleUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
 
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.util.concurrent.TimeUnit;
 
 public class DiscordLoggerManager extends ListenerAdapter {
 
@@ -40,6 +50,7 @@ public class DiscordLoggerManager extends ListenerAdapter {
 
             embedBuilder.setAuthor(user.getName(), null, user.getDefaultAvatarUrl())
                     .setDescription(description)
+                    .addField("Account Created", "<t:" + String.valueOf(user.getTimeCreated().toEpochSecond()) + ":f>", false)
                     .setTimestamp(Instant.now())
                     .setFooter(event.getGuild().getName());
 
