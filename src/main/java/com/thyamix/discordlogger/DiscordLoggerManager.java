@@ -3,8 +3,6 @@ package com.thyamix.discordlogger;
 import com.thyamix.model.ServerSettings;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.JDA;
-import net.dv8tion.jda.api.audit.ActionType;
-import net.dv8tion.jda.api.audit.AuditLogEntry;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import net.dv8tion.jda.api.entities.channel.concrete.TextChannel;
@@ -13,17 +11,8 @@ import net.dv8tion.jda.api.events.guild.member.GuildMemberRemoveEvent;
 import net.dv8tion.jda.api.events.guild.voice.GuildVoiceUpdateEvent;
 import net.dv8tion.jda.api.events.message.MessageDeleteEvent;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
-import net.dv8tion.jda.api.events.role.RoleCreateEvent;
-import net.dv8tion.jda.api.events.role.RoleDeleteEvent;
-import net.dv8tion.jda.api.events.role.update.GenericRoleUpdateEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.requests.restaction.pagination.AuditLogPaginationAction;
-
-import java.sql.Timestamp;
 import java.time.Instant;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
-import java.util.concurrent.TimeUnit;
 
 public class DiscordLoggerManager extends ListenerAdapter {
 
@@ -48,7 +37,8 @@ public class DiscordLoggerManager extends ListenerAdapter {
 
             String description = "**<@" + user.getId() + "> joined the server " + event.getGuild().getName() + "**";
 
-            embedBuilder.setAuthor(user.getName(), null, user.getDefaultAvatarUrl())
+            embedBuilder.setTitle(user.getName() + " has join " + event.getGuild().getName())
+                    .setAuthor(user.getName(), null, user.getDefaultAvatarUrl())
                     .setDescription(description)
                     .addField("Account Created", "<t:" + String.valueOf(user.getTimeCreated().toEpochSecond()) + ":f>", false)
                     .setTimestamp(Instant.now())
@@ -71,7 +61,8 @@ public class DiscordLoggerManager extends ListenerAdapter {
 
             String description = "**<@" + user.getId() + "> left the server " + event.getGuild().getName() + "**";
 
-            embedBuilder.setAuthor(user.getName(), null, user.getDefaultAvatarUrl())
+            embedBuilder.setTitle(user.getName() + " has left " + event.getGuild().getName())
+                    .setAuthor(user.getName(), null, user.getDefaultAvatarUrl())
                     .setDescription(description)
                     .setTimestamp(Instant.now())
                     .setFooter(event.getGuild().getName());
@@ -121,9 +112,10 @@ public class DiscordLoggerManager extends ListenerAdapter {
             String description;
             Channel channel = event.getChannel().asTextChannel();
 
-            description = "A message was deleted from " + channel.getAsMention() + " with Message-ID: " + event.getMessageId();
+            description = ":wastebasket: A message was deleted from " + channel.getAsMention() + " with Message-ID: " + event.getMessageId();
 
-            embedBuilder.setDescription(description)
+            embedBuilder.setTitle("Message deleted from " + channel.getName())
+                    .setDescription(description)
                     .setTimestamp(Instant.now())
                     .setFooter(event.getGuild().getName());
 
@@ -144,7 +136,8 @@ public class DiscordLoggerManager extends ListenerAdapter {
                 description = ":incoming_envelope: A message was sent on " + channel.getAsMention() + " by " + event.getAuthor().getAsMention() + " with Message-ID: " + event.getMessageId();
 
 
-                embedBuilder.setAuthor(user.getName(), null, user.getDefaultAvatarUrl())
+                embedBuilder.setTitle("Message sent in " + channel.getName())
+                        .setAuthor(user.getName(), null, user.getDefaultAvatarUrl())
                         .setDescription(description)
                         .addField("Message", event.getMessage().getContentDisplay(), false)
                         .setTimestamp(Instant.now())
